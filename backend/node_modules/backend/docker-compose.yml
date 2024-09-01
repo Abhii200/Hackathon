@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: hosp_db
+    ports:
+      - "5430:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hosp-backend
+    restart: always
+    ports:
+      - "5001:5000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/hosp_db
+
+volumes:
+  pgdata:
+  pgadmin_data:
