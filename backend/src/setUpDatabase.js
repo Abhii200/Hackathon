@@ -155,6 +155,28 @@ async function setupDatabase() {
         await client.query(alterAppointmentsTableQuery);
         console.log('Added user_id column to appointments table!');
 
+
+        const alterUsersTableQuery = `
+            ALTER TABLE users
+            ADD COLUMN otp VARCHAR(6),
+            ADD COLUMN otp_expires TIMESTAMPTZ;
+        `;
+        await client.query(alterUsersTableQuery);
+        console.log('Added OTP columns to users table!');
+
+        
+        const alterUsersTableQuerypn= `
+            ALTER TABLE users
+            ADD COLUMN phone_number VARCHAR(15);
+        `;
+        await client.query(alterUsersTableQuerypn);
+        console.log('Added phone_number column to users table!');
+
+        // Insert data into the users table
+        
+
+
+
     } catch (err) {
         console.error('Error setting up the database:', err);
     } finally {
